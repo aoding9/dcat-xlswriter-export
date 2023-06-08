@@ -2,12 +2,23 @@
 
 dcat扩展：xlswriter导出
 
+之前用了laravel-excel做dcat的数据导出，那玩意太耗内存了，数据量大的时候直接超时卡死，换xlswriter这个扩展来搞。
+
+
+
 效果：
 ![Laravel](https://cdn.learnku.com/uploads/images/202306/08/78338/1EjVb0begV.png!large)
 
 ![Laravel](https://cdn.learnku.com/uploads/images/202306/08/78338/PKyLtlX9DV.png!large)
 
 ### 安装
+
+首先按文档把xlswriter扩展安装上
+
+https://xlswriter-docs.viest.me/
+
+在phpinfo中确认安装成功后，进行下一步
+
 `composer require aoding9/dcat-xlswriter-export`
 
 因为官方源下载太慢了，国内镜像又有各种问题可能导致安装失败，可以把以下代码添加到composer.json，直接从github安装
@@ -90,17 +101,14 @@ class UserExport extends BaseExport {
 
 ```
 
-在dcat的`UserController`的grid方法中，添加如下代码：
+在dcat的`UserController`控制器的grid方法中，添加` $grid->export(new UserExport())`
 ```php
 namespace App\Admin\Controllers;
-use Dcat\Admin\Grid;
-use Aoding9\Dcat\Xlswriter\Export\Demo\User;
-use Aoding9\Dcat\Xlswriter\Export\Demo\UserExport;
 class UserController {
     protected function grid()
     {
         return Grid::make(new User(), function (Grid $grid) {
-            //添加这行即可
+            // 添加这行即可
              $grid->export(new UserExport());
         });
     }
@@ -108,4 +116,5 @@ class UserController {
 
 ```
 如果map中需要调用关联关系，可以在grid中使用with来预加载关联，从而优化查询。
+
 
