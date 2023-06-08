@@ -2,11 +2,13 @@
 
 dcat扩展：xlswriter导出
 
-示例：
+效果：
+![Laravel](https://cdn.learnku.com/uploads/images/202306/08/78338/1EjVb0begV.png!large)
 
+![Laravel](https://cdn.learnku.com/uploads/images/202306/08/78338/PKyLtlX9DV.png!large)
 
 ### 安装
-`composer require aoding9/laravel-baidu-aip`
+`composer require aoding9/dcat-xlswriter-export`
 
 因为官方源下载太慢了，国内镜像又有各种问题可能导致安装失败，可以把以下代码添加到composer.json，直接从github安装
 ```json
@@ -59,8 +61,8 @@ class UserExport extends BaseExport {
     ];
     public $fileName = '用户导出表'; // 导出的文件名
     public $tableTitle = '用户导出表'; // 第一行标题
-    public $rowHeight = 30; // 行高
-    public $headerRowHeight = 50; // 表头行高
+    //public $rowHeight = 30; // 行高 可选配置项
+    //public $headerRowHeight = 50; // 表头行高 可选配置项
     
     // 将模型字段映射为数组
     public function map($row) {
