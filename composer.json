@@ -1,0 +1,25 @@
+{
+    "name": "aoding9/dcat-xlswriter-export",
+    "description": "xlswriter导出excel（dcat-admin扩展）",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "aoding9",
+            "email": "xy5217733@163.com"
+        }
+    ],
+    "require": {
+        "laravel/framework": "~5.5|~6.0|~7.0|~8.0|~9.0",
+        "dcat/laravel-admin": "2.*",
+        "php": ">=7.1.0",
+        "viest/php-ext-xlswriter-ide-helper": "dev-master",
+        "ext-xlswriter": "*"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Aoding9\\Dcat\\Xlswriter\\Export\\": "src/"
+        }
+    }
+}
