@@ -37,10 +37,6 @@ https://xlswriter-docs.viest.me/
 
 `composer config -g repo.packagist composer https://packagist.org`
 
-阿里云镜像（可能安装失败）
-
-`composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/`
-
 
 ### 配置
 
