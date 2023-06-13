@@ -8,6 +8,7 @@
 namespace Aoding9\Dcat\Xlswriter\Export\Demo;
 
 use Aoding9\Dcat\Xlswriter\Export\BaseExport;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Aoding9\Dcat\Xlswriter\Export\Demo\User; // 要导出的模型，用于代码提示
 
@@ -44,8 +45,8 @@ class UserExport extends BaseExport {
             ];
             // dd($rowData);
             return $rowData;
-        } catch (\Exception $e) {
-            dd('id为' . $row->id . '的记录导出失败，原因：' . $e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception('id为' . $row->id . '的记录导出失败，原因：' . $e->getMessage());
         }
     }
 }

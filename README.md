@@ -49,15 +49,20 @@ https://xlswriter-docs.viest.me/
 以用户导出为例，首先创建一个UserExport导出类，继承`Aoding9\Dcat\Xlswriter\Export\BaseExport`基类，一般放在app\Admin\Exports目录下
 ```php
 <?php
+/**
+ * @Desc 用户导出
+ * @User yangyang
+ * @Date 2022/8/9 17:01
+ */
 
-namespace App\Admin\Exports;
+namespace Aoding9\Dcat\Xlswriter\Export\Demo;
 
 use Aoding9\Dcat\Xlswriter\Export\BaseExport;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Aoding9\Dcat\Xlswriter\Export\Demo\User; // 要导出的模型，用于代码提示
 
 class UserExport extends BaseExport {
-    // 定义表头
     public $header = [
         ['column' => 'a', 'width' => 8, 'name' => '序号'],
         ['column' => 'b', 'width' => 8, 'name' => 'id'],
@@ -66,6 +71,7 @@ class UserExport extends BaseExport {
         ['column' => 'e', 'width' => 20, 'name' => '注册时间'],
     
     ];
+    
     public $fileName = '用户导出表'; // 导出的文件名
     public $tableTitle = '用户导出表'; // 第一行标题
     //public $rowHeight = 30; // 行高 可选配置项
@@ -84,33 +90,19 @@ class UserExport extends BaseExport {
                 $this->index,      // 自增序号，用于无id时，排查导出失败的行
                 $row->id,
                 $row->name,
-                $row->phone,
+                $row->phone??'',
                 $row->created_at->toDateTimeString(),
             ];
             // dd($rowData);
             return $rowData;
-        } catch (\Exception $e) {
-            dd('id为' . $row->id . '的记录导出失败，原因：' . $e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception('id为' . $row->id . '的记录导出失败，原因：' . $e->getMessage());
         }
     }
 }
 
-```
-
-在dcat的`UserController`控制器的grid方法中，添加` $grid->export(new UserExport())`
-```php
-namespace App\Admin\Controllers;
-class UserController {
-    protected function grid()
-    {
-        return Grid::make(new User(), function (Grid $grid) {
-            // 添加这行即可
-             $grid->export(new UserExport());
-        });
-    }
-}
 
 ```
 如果map中需要调用关联关系，可以在grid中使用with来预加载关联，从而优化查询。
-
+仓库中包含UserExport的demo,如果你的已有users表和User模型，可以尝试使用demo进行导出测试
 
