@@ -14,7 +14,7 @@ dcat扩展：xlswriter导出
 
 **导出类简单示例**
 
-![dcat扩展：xlswriter导出，首行合并标题，自定义列宽，表头冻结，composer安装使用](https://cdn.learnku.com/uploads/images/202306/14/78338/PdJ3c08vXO.png!large)
+![laravel的dcat扩展：xlswriter导出，自定义合并数据单元格，自定义样式、列宽](https://cdn.learnku.com/uploads/images/202306/15/78338/azHOlbahyX.png!large)
 
 
 ![Laravel](https://cdn.learnku.com/uploads/images/202306/08/78338/1EjVb0begV.png!large)
