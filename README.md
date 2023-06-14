@@ -1,19 +1,22 @@
+前文：[dcat admin用xlswriter导出数据，自定义列宽行高，首行合并表名](https://learnku.com/articles/71069)
 ### 简介
 
 dcat扩展：xlswriter导出
 
-之前用了laravel-excel做dcat的数据导出，那玩意太耗内存了，数据量大的时候直接超时卡死，换xlswriter这个扩展来搞。
+之前用了laravel-excel做dcat的数据导出，太耗内存而且速度慢，数据量大的时候直接超时卡死，换xlswriter这个扩展来搞。
 
 
 
 效果：
-![Laravel](https://cdn.learnku.com/uploads/images/202306/08/78338/1EjVb0begV.png!large)
 
-![Laravel](https://cdn.learnku.com/uploads/images/202306/08/78338/PKyLtlX9DV.png!large)
+![](http://aoding9.top/uploads/images/2023-06-14/d9529fbc84cfd1a4abf72a4c87933d3d64891a31782c2.png)
+
+
+![](http://aoding9.top/uploads/images/2023-06-14/877cc8fe931da1de769875f8191639c864891a373bab2.png)
 
 ### 安装
 
-首先按文档把xlswriter扩展安装上
+首先根据文档把xlswriter扩展安装好
 
 https://xlswriter-docs.viest.me/
 
@@ -21,7 +24,11 @@ https://xlswriter-docs.viest.me/
 
 `composer require aoding9/dcat-xlswriter-export`
 
-因为官方源下载太慢了，国内镜像又有各种问题可能导致安装失败，可以把以下代码添加到composer.json，直接从github安装
+安装失败可能是用了国内镜像，切换为官方源
+
+`composer config repo.packagist composer https://packagist.org`
+
+因为官方源下载慢，国内镜像又有各种问题可能导致安装失败，可以把以下代码添加到composer.json，直接从github安装
 ```json
 {
   "repositories": [
@@ -33,10 +40,6 @@ https://xlswriter-docs.viest.me/
 }
 ```
 
-官方源（速度慢）
-
-`composer config -g repo.packagist composer https://packagist.org`
-
 
 ### 配置
 
@@ -44,25 +47,20 @@ https://xlswriter-docs.viest.me/
 
 
 
-
 ### 使用
 以用户导出为例，首先创建一个UserExport导出类，继承`Aoding9\Dcat\Xlswriter\Export\BaseExport`基类，一般放在app\Admin\Exports目录下
 ```php
 <?php
-/**
- * @Desc 用户导出
- * @User yangyang
- * @Date 2022/8/9 17:01
- */
 
-namespace Aoding9\Dcat\Xlswriter\Export\Demo;
+namespace App\Admin\Exports;
 
 use Aoding9\Dcat\Xlswriter\Export\BaseExport;
-use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Aoding9\Dcat\Xlswriter\Export\Demo\User; // 要导出的模型，用于代码提示
+use Exception;
 
 class UserExport extends BaseExport {
+    // 定义表头
     public $header = [
         ['column' => 'a', 'width' => 8, 'name' => '序号'],
         ['column' => 'b', 'width' => 8, 'name' => 'id'],
@@ -71,7 +69,6 @@ class UserExport extends BaseExport {
         ['column' => 'e', 'width' => 20, 'name' => '注册时间'],
     
     ];
-    
     public $fileName = '用户导出表'; // 导出的文件名
     public $tableTitle = '用户导出表'; // 第一行标题
     //public $rowHeight = 30; // 行高 可选配置项
@@ -90,7 +87,7 @@ class UserExport extends BaseExport {
                 $this->index,      // 自增序号，用于无id时，排查导出失败的行
                 $row->id,
                 $row->name,
-                $row->phone??'',
+                $row->phone,
                 $row->created_at->toDateTimeString(),
             ];
             // dd($rowData);
@@ -101,8 +98,22 @@ class UserExport extends BaseExport {
     }
 }
 
+```
+
+在dcat的`UserController`控制器的grid方法中，添加` $grid->export(new UserExport())`
+```php
+namespace App\Admin\Controllers;
+class UserController {
+    protected function grid()
+    {
+        return Grid::make(new User(), function (Grid $grid) {
+            // 添加这行即可
+             $grid->export(new UserExport());
+        });
+    }
+}
 
 ```
 如果map中需要调用关联关系，可以在grid中使用with来预加载关联，从而优化查询。
-仓库中包含UserExport的demo,如果你的已有users表和User模型，可以尝试使用demo进行导出测试
 
+仓库中包含UserExport的demo,如果你的已有users表和User模型，可以尝试使用demo进行导出测试
