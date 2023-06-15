@@ -396,24 +396,45 @@ abstract class BaseExport extends AbstractExporter {
         return $this->excel->output();
     }
     
+    /**
+     * @Desc 根据列数得到字母
+     * 可以看做10进制转26进制，除26取余，逆序排列，把余数转成字母倒序拼接。
+     * @param int $columnIndex
+     * @return string
+     * @Date 2023/6/15 17:51
+     */
     public function getColumn(int $columnIndex) {
-        $columnIndex++;
-        $first = 64 + (int)($columnIndex / 26);
-        $second = 64 + $columnIndex % 26; // 26个字母
-        if ($second === 64) { // 如果余0，说明是26的倍数，末位是Z，首位暂不进位，27才进位
-            $first--;
-            $second = 'Z';
-        } else {
-            $second = chr($second);
+        // 由于循环条件为$divide>0，而且$columnIndex从0开始，所以+1
+        $divide = $columnIndex + 1;
+        $columnName = '';
+        while ($divide > 0) {
+            // $mod为0~25，对应26个字母，$divide初始最小为1，要-1才能得到正确的余数范围
+            $mod = ($divide - 1) % 26;
+            $columnName = chr(65 + $mod) . $columnName;
+            $divide = (int)(($divide - $mod) / 26); // 减$mod，就是去掉末尾一位的数，除以26，相当于去掉这个数位，循环这个过程，直到取到最高位，也就是截取后的数，前面为0
         }
-        if ($first > 90) {          //64 + 26
-            throw new Exception('超出最大列数');
-        } else if ($first === 64) {
-            $first = '';
-        } else {
-            $first = chr($first);
+        return $columnName;
+    }
+    
+    /**
+     * @Desc 根据字母列名得到列数
+     * @param string $columnName
+     * @return float|int
+     * @Date 2023/6/15 19:49
+     */
+    public function getColumnIndexByName(string $columnName){
+        // 将列名中的字母按顺序拆分成一个一个单独的字母，并进行倒序排列。
+        $columnNameReverse = strrev($columnName);
+        $arr = str_split($columnNameReverse);
+    
+        // 对每个字母进行转换，将其转换为对应的数字
+        $columnIndex = 0;
+        foreach ($arr as $key => $value) {
+            $num = ord($value) - 64;
+            $columnIndex += $num * (26 ** $key);
         }
-        return $first . $second;
+        // 将最终计算出的列数值减去1，以得到以0为起点的列数值
+        return $columnIndex - 1;
     }
     
     public function shouldDelete($v = true) {
