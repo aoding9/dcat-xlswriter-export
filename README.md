@@ -24,7 +24,6 @@ dcat扩展：xlswriter导出
 **导出类自定义合并，自定义样式**
 
 
-![dcat扩展：xlswriter导出，自定义合并单元格，自定义列宽，自定义样式](https://cdn.learnku.com/uploads/images/202306/15/78338/XqCcdRjK0H.png!large)
 
 
 ![dcat扩展：xlswriter导出，自定义合并单元格，自定义列宽，自定义样式](https://cdn.learnku.com/uploads/images/202306/15/78338/VA8qPNr1kR.png!large)
@@ -131,10 +130,10 @@ class UserMergeExport extends BaseExport {
     public $titleRowHeight = 40;  // 行高 可选配置项
     public $headerRowHeight = 50; // 表头行高 可选配置项
     /**
-     * @Desc 插入一个分块的数据后回调
+     * @Desc 在分块数据插入每行后回调（到下一个分块，则上一分块被销毁）
      * @param $row
      */
-    public function afterInsertOneChunkNormalData($row) {
+    public function afterInsertEachRowInEachChunk($row) {
         /** @var User $row */
         // 奇数行进行合并
         // 不合并到数据行之外
@@ -182,4 +181,5 @@ class UserMergeExport extends BaseExport {
 为了方便自定义排版和修改数据，基类属性和方法都为public，方便子类重写
 
 
-
+更新说明：
+1.2.2 afterInsertOneChunkNormalData更名为afterInsertEachRowInEachChunk

@@ -316,14 +316,16 @@ abstract class BaseExport extends AbstractExporter {
     
     public function insertNormalData(Collection $data) {
         $this->data = $data;
-        
         $index = $this->index;
+        
+        // 给每行数据绑定index
         foreach ($this->data as $rowData) {
             if ($rowData instanceof Model) {
                 $rowData->index = $index;
             }
             $index++;
         }
+        
         foreach ($this->data as $rowData) {
             $this->setRowHeight();
             
@@ -333,7 +335,8 @@ abstract class BaseExport extends AbstractExporter {
                 $this->insertCell($this->currentLine, $column, $columnData);
             }
             
-            $this->afterInsertOneChunkNormalData($rowData);
+            // 行插入后回调，$this->data是分块数据，绑定了index，$this->getCurrentLine()获取当前行数，$this->getRowByIndex($this->index）获取该行数据。
+            $this->afterInsertEachRowInEachChunk($rowData);
             
             $this->index++;
             $this->currentLine++;
@@ -344,12 +347,13 @@ abstract class BaseExport extends AbstractExporter {
         return $this;
     }
     
+
     /**
-     * @Desc 插入一个分块的数据后回调（之后分块销毁）
+     * @Desc 在分块数据插入每行后回调（到下一个分块，则上一分块被销毁）
      * @param $rowData
      * @Date 2023/6/14 22:55
      */
-    public function afterInsertOneChunkNormalData($rowData) {
+    public function afterInsertEachRowInEachChunk($rowData) {
     }
     
     /**

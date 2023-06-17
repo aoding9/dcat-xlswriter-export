@@ -39,7 +39,7 @@ class UserMergeExport extends BaseExport {
     public $titleRowHeight = 40;  // 行高 可选配置项
     public $headerRowHeight = 50; // 表头行高 可选配置项
     /**
-     * @Desc 插入一个分块的数据后回调
+     * @Desc 在分块数据插入每行后回调（到下一个分块，则上一分块被销毁）
      * @param $row
      */
     public function afterInsertOneChunkNormalData($row) {
