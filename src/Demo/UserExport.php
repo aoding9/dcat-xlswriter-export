@@ -5,7 +5,7 @@ class UserExport extends BaseExport {
     public $header = [
         ['column' => 'a', 'width' => 8, 'name' => '序号'],
         ['column' => 'b', 'width' => 8, 'name' => 'id'],
-        ['column' => 'c', 'width' => 20, 'name' => '姓名'],
+        ['column' => 'c', 'width' => 10, 'name' => '姓名'],
         ['column' => 'd', 'width' => 10, 'name' => '性别'],
         ['column' => 'e', 'width' => 20, 'name' => '注册时间'],
     

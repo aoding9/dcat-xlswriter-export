@@ -396,6 +396,8 @@ abstract class BaseExport extends AbstractExporter {
         return $this->excel->output();
     }
     
+    public $columnMap = [];
+    
     /**
      * @Desc 根据列数得到字母
      * 可以看做10进制转26进制，除26取余，逆序排列，把余数转成字母倒序拼接。
@@ -404,6 +406,10 @@ abstract class BaseExport extends AbstractExporter {
      * @Date 2023/6/15 17:51
      */
     public function getColumn(int $columnIndex) {
+        if (array_key_exists($columnIndex,$this->columnMap)) {
+            return $this->columnMap[$columnIndex];
+        }
+        
         // 由于循环条件为$divide>0，而且$columnIndex从0开始，所以+1
         $divide = $columnIndex + 1;
         $columnName = '';
@@ -413,20 +419,24 @@ abstract class BaseExport extends AbstractExporter {
             $columnName = chr(65 + $mod) . $columnName;
             $divide = (int)(($divide - $mod) / 26); // 减$mod，就是去掉末尾一位的数，除以26，相当于去掉这个数位，循环这个过程，直到取到最高位，也就是截取后的数，前面为0
         }
-        return $columnName;
+        return $this->columnMap[$columnIndex] = $columnName;
     }
     
+    public $columnIndexMap = [];
     /**
      * @Desc 根据字母列名得到列数
      * @param string $columnName
      * @return float|int
      * @Date 2023/6/15 19:49
      */
-    public function getColumnIndexByName(string $columnName){
+    public function getColumnIndexByName(string $columnName) {
+        if (array_key_exists($columnName,$this->columnIndexMap)) {
+            return $this->columnIndexMap[$columnName];
+        }
         // 将列名中的字母按顺序拆分成一个一个单独的字母，并进行倒序排列。
         $columnNameReverse = strrev($columnName);
         $arr = str_split($columnNameReverse);
-    
+        
         // 对每个字母进行转换，将其转换为对应的数字
         $columnIndex = 0;
         foreach ($arr as $key => $value) {
@@ -434,7 +444,8 @@ abstract class BaseExport extends AbstractExporter {
             $columnIndex += $num * (26 ** $key);
         }
         // 将最终计算出的列数值减去1，以得到以0为起点的列数值
-        return $columnIndex - 1;
+        return $this->columnIndexMap[$columnName] = $columnIndex - 1;
+    
     }
     
     public function shouldDelete($v = true) {
