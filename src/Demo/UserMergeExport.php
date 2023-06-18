@@ -42,7 +42,7 @@ class UserMergeExport extends BaseExport {
      * @Desc 在分块数据插入每行后回调（到下一个分块，则上一分块被销毁）
      * @param $row
      */
-    public function afterInsertOneChunkNormalData($row) {
+    public function afterInsertEachRowInEachChunk($row) {
         /** @var User $row */
         // 奇数行进行合并
         // 不合并到数据行之外

@@ -23,10 +23,7 @@ dcat扩展：xlswriter导出
 
 **导出类自定义合并，自定义样式**
 
-
-
-
-![dcat扩展：xlswriter导出，自定义合并单元格，自定义列宽，自定义样式](https://cdn.learnku.com/uploads/images/202306/15/78338/VA8qPNr1kR.png!large)
+![laravel的dcat扩展：xlswriter导出，自定义合并数据单元格，自定义样式、列宽](https://cdn.learnku.com/uploads/images/202306/18/78338/9jAqkuXxSu.png!large)
 
 ### 安装
 
