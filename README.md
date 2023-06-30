@@ -6,7 +6,7 @@ dcat扩展：xlswriter导出
 
 由于xlswriter直接导出的表格不够美观，在实际使用中，往往需要合并单元格和自定义表格样式等，我进行了一些封装，使用更加方便简洁，定义表头和数据的方式也更加直观。
 
-本扩展是(laravel-xlswriter-export)[https://github.com/aoding9/laravel-xlswriter-export]的dcat版本，使用文档直接看laravel-xlswriter-export的readme即可，此处只介绍不同点。
+本扩展是[laravel-xlswriter-export](https://github.com/aoding9/laravel-xlswriter-export) 的dcat版本，使用文档直接看laravel-xlswriter-export的readme即可，此处只介绍不同点。
 
 ## 安装
 
