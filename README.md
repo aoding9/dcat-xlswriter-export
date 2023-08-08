@@ -2,9 +2,9 @@
 
 dcat扩展：xlswriter导出
 
-之前用了laravel-excel做数据导出，太耗内存速度也慢，数据量大的时候内存占用容易达到php上限，或者响应超时，换成xlswriter这个扩展来做。
+之前用了laravel-excel做数据导出，很耗内存速度也慢，数据量大的时候内存占用容易达到php上限，或者响应超时，换成xlswriter这个扩展来做。
 
-由于xlswriter直接导出的表格不够美观，在实际使用中，往往需要合并单元格和自定义表格样式等，我进行了一些封装，使用更加方便简洁，定义表头和数据的方式也更加直观。
+由于xlswriter直接导出的表格不够美观，在使用中，经常需要合并单元格和自定义表格样式等，我进行了一些封装，使用更加方便简洁，定义表头和数据的方式也更加直观。
 
 本扩展是[laravel-xlswriter-export](https://github.com/aoding9/laravel-xlswriter-export) 的dcat版本，使用文档直接看laravel-xlswriter-export的readme即可，此处只介绍不同点。
 
@@ -43,6 +43,9 @@ https://xlswriter-docs.viest.me/
 ### 2、在控制器中使用
 
 在grid方法中使用`$grid->export(new UserExport());`即可
+
+由于构造函数传参为空，数据源为other类型，走`buildDataFromOther`获取grid数据，如有特殊需要，可以重写该方法修改获取到的数据
+
 ```php
 //use xxx
 
