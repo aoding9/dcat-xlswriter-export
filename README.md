@@ -63,14 +63,18 @@ protected function grid() {
 
 由于swoole中不能调用`exit()`方法，需要在控制器中直接return下载响应
 
-为此需要在dcat控制器中引入`HandleExportIfUseSwoole`，这个trait将重写index方法，以正确地触发下载
+为此，需要在导出类中将`$useSwoole`属性设为true,然后在dcat控制器中引入`HandleExportIfUseSwoole`，这个trait将重写index方法，以正确地触发下载
 
 ```php
+// UserExport中添加
+public $useSwoole = true;
+
+// UserController中添加
 use Aoding9\Dcat\Xlswriter\Export\HandleExportIfUseSwoole;
 ```
 
 ## 版本更新
 
 - v1.2.2 (2023-9-16)
-    - download时判断`app()->has('swoole')`，如果使用了swoole，将返回下载响应，代替默认的exit()
+    - download时调用`$this->useSwoole()`判断是否使用了swoole，如果使用了，将返回下载响应，代替默认的exit()
     - 新增`HandleExportIfUseSwoole`，用于swoole访问dcat时，重写控制器的index以返回下载响应
