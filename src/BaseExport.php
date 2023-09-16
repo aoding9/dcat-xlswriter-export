@@ -1,6 +1,6 @@
 <?php
 /**
- * @Desc 导出基类
+ * 导出基类
  * @User yangyang
  * @Date 2022/8/24 10:56
  */
@@ -29,33 +29,33 @@ abstract class BaseExport extends AbstractExporter {
      * @var Collection 数据集合
      */
     public $data;
-    
+
     /**
-     * @Desc 临时保存路径
+     * 临时保存路径
      * @return string
      * @Date 2023/6/25 19:02
      */
     public function getTmpDir(): string {
         $tmp = ini_get('upload_tmp_dir');
-        
+
         if ($tmp !== false && file_exists($tmp)) {
             return realpath($tmp);
         }
-        
+
         return realpath(sys_get_temp_dir());
     }
-    
+
     /**
-     * @Desc 拼接导出后文件的保存路径
+     * 拼接导出后文件的保存路径
      * @return string
      * @Date 2023/6/21 21:34
      */
     public function getStoreFilePath() {
         return $this->getTmpDir() . '/';
     }
-    
+
     /**
-     * @Desc 拼接完整的文件名称
+     * 拼接完整的文件名称
      * @param $filename
      * @return $this
      * @Date 2023/6/25 19:02
@@ -64,32 +64,32 @@ abstract class BaseExport extends AbstractExporter {
         $this->fileName = $filename . Date('YmdHis') . '.xlsx';
         return $this;
     }
-    
+
     public function getFilename() {
         return $this->fileName;
     }
-    
+
     /**
-     * @Desc 获取定义的表头
+     * 获取定义的表头
      * @return array
      * @Date 2023/6/25 19:03
      */
     public function getHeader() {
         return $this->header;
     }
-    
+
     public function getTableTitle() {
         return $this->tableTitle;
     }
-    
+
     public function getData() {
         return $this->data;
     }
-    
+
     public function getChunkData() {
         return $this->chunkData;
     }
-    
+
     /**
      * @var int 当前插入行的序号，不包括表头
      */
@@ -98,9 +98,9 @@ abstract class BaseExport extends AbstractExporter {
      * @var string 数据源类型，query/collection
      */
     public $dataSourceType;
-    
+
     /**
-     * @Desc 初始化数据源，判断数据源的类型
+     * 初始化数据源，判断数据源的类型
      * @param array|Collection|Builder|null $dataSource
      * @return $this
      * @Date 2023/6/21 22:02
@@ -120,9 +120,9 @@ abstract class BaseExport extends AbstractExporter {
         $this->index = 1;
         return $this;
     }
-    
+
     /**
-     * @Desc 设置数据
+     * 设置数据
      * @param $data
      * @return $this
      * @Date 2023/6/25 19:03
@@ -132,18 +132,18 @@ abstract class BaseExport extends AbstractExporter {
             $data = collect($data);
         }
         $this->data = $data;
-        
+
         return $this;
     }
-    
+
     /**
-     * @Desc 定义数据到列的关系
+     * 定义数据到列的关系
      * @param $row
      * @return mixed
      * @Date 2023/6/25 19:05
      */
     abstract public function eachRow($row);
-    
+
     public $fontFamily = '微软雅黑';  // 默认字体
     public $rowHeight = 40;           // 默认行高
     public $headerRowHeight = 40;     // 表头行高
@@ -165,9 +165,9 @@ abstract class BaseExport extends AbstractExporter {
      * @var Collection 表头的数据，包括标题行
      */
     public $headerData;
-    
+
     /**
-     * @Desc 设置表头数据
+     * 设置表头数据
      * @return $this
      * @Date 2023/6/25 19:08
      */
@@ -179,9 +179,9 @@ abstract class BaseExport extends AbstractExporter {
         $this->headerData->push(array_column($this->getHeader(), 'name'));
         return $this;
     }
-    
+
     public $query;
-    
+
     /**
      * 构造器
      * @param Builder|array|Collection|null $dataSource 数据源传入查询构造器、数组、集合均可，为空时需重写buildData以定义数据
@@ -195,19 +195,19 @@ abstract class BaseExport extends AbstractExporter {
         }
         $this->init($dataSource);
     }
-    
+
     /**
      * @var array 初始化Excel实例时的配置
      */
     public $config;
-    
+
     public function setConfig($config = null) {
         $this->config = ['path' => $this->getStoreFilePath()];
         return $this;
     }
-    
+
     /**
-     * @Desc 设置查询构造器
+     * 设置查询构造器
      * @param $query
      * @return $this
      * @Date 2023/6/25 19:12
@@ -216,28 +216,28 @@ abstract class BaseExport extends AbstractExporter {
         $this->query = $query;
         return $this;
     }
-    
+
     /**
-     * @Desc 根据fileName获取拼接后最终的文件名
+     * 根据fileName获取拼接后最终的文件名
      * @return string
      * @Date 2023/6/25 19:12
      */
     public function getFinalFileName() {
         return $this->setFilename($this->fileName)->getFilename();
     }
-    
+
     /**
      * @var string 工作簿名，用于导出多个工作簿
      */
     public $sheetName = 'Sheet1';
-    
+
     public function setSheet($name) {
         $this->sheetName = $name;
         return $this;
     }
-    
+
     /**
-     * @Desc 初始化一个新的Excel实例
+     * 初始化一个新的Excel实例
      * @param $config
      * @return $this
      * @throws Exception
@@ -247,9 +247,9 @@ abstract class BaseExport extends AbstractExporter {
         $this->setExcel(new Excel($config));
         return $this;
     }
-    
+
     /**
-     * @Desc 初始化导出类
+     * 初始化导出类
      * @param mixed $dataSource
      * @return $this
      * @throws Exception
@@ -261,12 +261,12 @@ abstract class BaseExport extends AbstractExporter {
              ->newExcel($this->config)
             ->excel
             ->fileName($this->getFinalFileName(), $this->sheetName);
-        
+
         return $this;
     }
-    
+
     /**
-     * @Desc 实例对象挂载到导出类
+     * 实例对象挂载到导出类
      * @param Excel $excel
      * @return $this
      * @Date 2023/6/25 19:16
@@ -275,13 +275,13 @@ abstract class BaseExport extends AbstractExporter {
         $this->excel = $excel;
         return $this;
     }
-    
+
     public function getExcel() {
         return $this->excel;
     }
-    
+
     /**
-     * @Desc 设置表格冻结
+     * 设置表格冻结
      * @param int $row
      * @param int $column
      * @return $this
@@ -293,14 +293,14 @@ abstract class BaseExport extends AbstractExporter {
         }
         return $this;
     }
-    
+
     /**
      * @var bool 是否启用表格冻结功能
      */
     public $useFreezePanes = false;
-    
+
     /**
-     * @Desc 启用表格冻结
+     * 启用表格冻结
      * @param bool $v
      * @return $this
      * @Date 2023/6/25 19:16
@@ -309,16 +309,16 @@ abstract class BaseExport extends AbstractExporter {
         $this->useFreezePanes = $v;
         return $this;
     }
-    
+
     /**
-     * @Desc 插入数据前回调
+     * 插入数据前回调
      * @return $this
      * @Date 2023/6/25 19:16
      */
     public function beforeInsertData() {
         return $this;
     }
-    
+
     /**
      * @var bool 是否使用首行标题
      */
@@ -327,9 +327,9 @@ abstract class BaseExport extends AbstractExporter {
      * @var string 首行标题的内容
      */
     public $titleStyle;
-    
+
     /**
-     * @Desc 设置标题的样式
+     * 设置标题的样式
      * @Date 2023/6/25 19:17
      */
     public function setTitleStyle() {
@@ -344,14 +344,14 @@ abstract class BaseExport extends AbstractExporter {
                 ->toResource();
         return $this;
     }
-    
+
     /**
      * @var resource 表头样式
      */
     public $headerStyle;
-    
+
     /**
-     * @Desc 设置表头样式
+     * 设置表头样式
      * @Date 2023/6/25 19:17
      */
     public function setHeaderStyle() {
@@ -367,7 +367,7 @@ abstract class BaseExport extends AbstractExporter {
                 ->toResource();
         return $this;
     }
-    
+
     /**
      * @var bool 是否使用全局样式代替列默认样式
      * 设置为否则使用列默认样式，会导致末尾行之后仍有边框，但是速度更快
@@ -377,9 +377,9 @@ abstract class BaseExport extends AbstractExporter {
      * @var resource 全局默认样式
      */
     public $globalStyle;
-    
+
     /**
-     * @Desc 设置全局默认样式
+     * 设置全局默认样式
      * @return $this
      * @Date 2023/6/25 19:19
      */
@@ -395,12 +395,12 @@ abstract class BaseExport extends AbstractExporter {
         $this->excel->defaultFormat($this->globalStyle); // 默认样式
         return $this;
     }
-    
+
     /**
      * @var resource 数据行一般样式
      */
     public $normalStyle;
-    
+
     public function getNormalStyle() {
         return $this->normalStyle ?: $this->normalStyle = (new Format($this->fileHandle))
             ->fontSize(10)
@@ -410,14 +410,14 @@ abstract class BaseExport extends AbstractExporter {
             ->wrap()
             ->toResource();
     }
-    
+
     /**
-     * @Desc 设置列默认样式
+     * 设置列默认样式
      * @Date 2023/6/25 19:20
      */
     public function setColumnStyle() {
         $this->columnWidths = array_column($this->getHeader(), 'width');
-        
+
         // 设置列宽 以及默认样式
         foreach ($this->columnWidths as $k => $columnWidth) {
             $column = $this->getColumn($k);
@@ -428,9 +428,9 @@ abstract class BaseExport extends AbstractExporter {
             }
         }
     }
-    
+
     /**
-     * @Desc 开始插入数据
+     * 开始插入数据
      * @return $this
      * @throws Exception
      * @Date 2023/6/25 19:20
@@ -442,26 +442,26 @@ abstract class BaseExport extends AbstractExporter {
         $this->setTitleStyle();
         $this->setHeaderStyle();
         $this->setColumnStyle();
-        
+
         // 全部导出时，分块插入数据
         $this->filePath = $this->insertHeaderData()
                                ->chunk(function(int $times, $perPage) {
                                    return $this->buildData($times, $perPage);
                                });
-        
+
         // 释放数据
         unset($this->data);
-        
+
         return $this;
     }
-    
+
     /**
-     * @Desc 保存文件后回调
+     * 保存文件后回调
      * @Date 2023/6/25 19:21
      */
     public function afterStore() {
     }
-    
+
     /**
      * @var resource 文件资源
      */
@@ -470,9 +470,9 @@ abstract class BaseExport extends AbstractExporter {
      * @var array 表头宽度数组
      */
     public $columnWidths;
-    
+
     /**
-     * @Desc 根据表头最大列数，设置末尾列名
+     * 根据表头最大列数，设置末尾列名
      * @param null $end
      * @return $this
      * @Date 2023/6/25 19:24
@@ -481,9 +481,9 @@ abstract class BaseExport extends AbstractExporter {
         $this->end = $end ?? $this->getColumn($this->headerLen - 1);
         return $this;
     }
-    
+
     /**
-     * @Desc 根据表头header的数组长度，设置最大列数
+     * 根据表头header的数组长度，设置最大列数
      * @param null $headerLen
      * @return $this
      * @Date 2023/6/25 19:25
@@ -492,9 +492,9 @@ abstract class BaseExport extends AbstractExporter {
         $this->headerLen = $headerLen ?? count($this->getHeader());
         return $this;
     }
-    
+
     /**
-     * @Desc 挂载文件资源类
+     * 挂载文件资源类
      * @param null $fileHandle
      * @return $this
      * @Date 2023/6/25 19:26
@@ -503,9 +503,9 @@ abstract class BaseExport extends AbstractExporter {
         $this->fileHandle = $fileHandle ?? $this->excel->getHandle();
         return $this;
     }
-    
+
     /**
-     * @Desc 输出到文件并设置文件路径
+     * 输出到文件并设置文件路径
      * @param null $filePath
      * @return $this
      * @Date 2023/6/25 19:22
@@ -514,9 +514,9 @@ abstract class BaseExport extends AbstractExporter {
         $this->filePath = $filePath ?? $this->output();
         return $this;
     }
-    
+
     /**
-     * @Desc 保存文件
+     * 保存文件
      * @return $this
      * @throws Exception
      * @Date 2023/6/25 19:23
@@ -534,34 +534,34 @@ abstract class BaseExport extends AbstractExporter {
              ->afterStore();
         return $this;
     }
-    
+
     /**
-     * @Desc 设置普通行的样式
+     * 设置普通行的样式
      * @return Excel
      * @Date 2023/6/14 18:12
      */
     public function setRowHeight() {
         return $this->excel->setRow($this->currentLine + 1, $this->rowHeight);
     }
-    
+
     /**
-     * @Desc 设置标题行高
+     * 设置标题行高
      * @return Excel
      * @Date 2023/6/25 19:26
      */
     public function setTitleHeight() {
         return $this->excel->setRow("A{$this->getCurrentLine()}", $this->titleRowHeight);                                  // title样式
     }
-    
+
     /**
-     * @Desc 设置表头行高
+     * 设置表头行高
      * @return Excel
      * @Date 2023/6/25 19:26
      */
     public function setHeaderHeight() {
         return $this->excel->setRow("A{$this->getCurrentLine()}", $this->headerRowHeight);
     }
-    
+
     /**
      * @var bool 导出后是否应该删除文件
      */
@@ -574,18 +574,18 @@ abstract class BaseExport extends AbstractExporter {
      * @var int 当前数据插入行,第一行为0，excel显示的行数需要再此基础上+1
      */
     public $currentLine = 0;
-    
+
     /**
-     * @Desc 获取当前插入行对应到excel显示的行数
+     * 获取当前插入行对应到excel显示的行数
      * @return int
      * @Date 2023/6/25 19:28
      */
     public function getCurrentLine() {
         return $this->currentLine + 1;
     }
-    
+
     /**
-     * @Desc 插入表头数据
+     * 插入表头数据
      * @return $this
      * @throws Exception
      * @Date 2023/6/25 19:29
@@ -593,7 +593,7 @@ abstract class BaseExport extends AbstractExporter {
     public function insertHeaderData() {
         // 设置数据开始行数
         $this->startDataRow = count($this->headerData);
-        
+
         foreach ($this->headerData as $row => $rowData) {
             $isHeader = true;
             // 第一行为标题
@@ -603,7 +603,7 @@ abstract class BaseExport extends AbstractExporter {
             } else {
                 $this->setHeaderHeight();
             }
-            
+
             foreach ($rowData as $column => $columnData) {
                 $this->insertCell(
                       $this->currentLine
@@ -613,23 +613,23 @@ abstract class BaseExport extends AbstractExporter {
                     , $isHeader ? $this->headerStyle : null
                 );
             }
-            
+
             $this->currentLine++;
         }
         return $this;
     }
-    
+
     /**
-     * @Desc 获取当前插入行的序号
+     * 获取当前插入行的序号
      * @return mixed
      * @Date 2023/6/25 19:30
      */
     public function getIndex() {
         return $this->index;
     }
-    
+
     /**
-     * @Desc 根据序号获取rowData，分块时会被销毁
+     * 根据序号获取rowData，分块时会被销毁
      * @param $index
      * @return mixed
      * @Date 2023/6/14 22:38
@@ -637,14 +637,14 @@ abstract class BaseExport extends AbstractExporter {
     public function getRowInChunkByIndex($index) {
         return $this->chunkData->where('index', $index)->first();
     }
-    
+
     /**
      * @var Collection $chunkData 分块数据
      */
     public $chunkData;
-    
+
     /**
-     * @Desc 插入分块数据到表格
+     * 插入分块数据到表格
      * @param Collection $data
      * @return $this
      * @throws Exception
@@ -653,7 +653,7 @@ abstract class BaseExport extends AbstractExporter {
     public function insertChunkData(Collection $data) {
         $this->chunkData = $data;
         $index = $this->getIndex();
-        
+
         // 给每行数据绑定序号
         foreach ($this->chunkData as $k => $rowData) {
             if ($rowData instanceof Model) {
@@ -664,40 +664,40 @@ abstract class BaseExport extends AbstractExporter {
             }
             $index++;
         }
-        
+
         foreach ($this->chunkData as $rowData) {
             $this->setRowHeight();
-            
+
             // 将数据传给eachRow，实现与列的对应关联
             $rowArray = $this->eachRow($rowData);
-            
+
             // 循环该行的每个数据，插入单元格
             foreach ($rowArray as $column => $columnData) {
                 $this->insertCell($this->currentLine, $column, $columnData);
             }
-            
+
             // 行插入后回调，$this->chunkData是分块数据，绑定了index，$this->getCurrentLine()获取当前行数，$this->getRowByIndex($this->index）获取该行数据。
             $this->afterInsertEachRowInEachChunk($rowData);
-            
+
             $this->index++;
             $this->currentLine++;
         }
-        
+
         unset($rowArray, $column);
-        
+
         return $this;
     }
-    
+
     /**
-     * @Desc 在分块数据插入每行后回调（到下一个分块，则上一分块被销毁）
+     * 在分块数据插入每行后回调（到下一个分块，则上一分块被销毁）
      * @param $rowData
      * @Date 2023/6/14 22:55
      */
     public function afterInsertEachRowInEachChunk($rowData) {
     }
-    
+
     /**
-     * @Desc 根据行数和列数，得到单元格名称
+     * 根据行数和列数，得到单元格名称
      * @param int $currentLine
      * @param int $column
      * @return string
@@ -706,11 +706,11 @@ abstract class BaseExport extends AbstractExporter {
     public function getCellName(int $currentLine, int $column) {
         return $this->getColumn($column) . $currentLine;
     }
-    
+
     public function insertCellHandle($currentLine, $column, $data, $format, $formatHandle) {
         return $this->excel->insertText($currentLine, $column, $data, $format, $formatHandle);
     }
-    
+
     /**
      * 根据行数和列数插入数据
      * @param int               $currentLine
@@ -730,14 +730,14 @@ abstract class BaseExport extends AbstractExporter {
             throw new Exception('行数为' . $this->getCurrentLine() . '的记录导出失败，原因：' . $e->getMessage());
         }
     }
-    
+
     /**
      * @var array 定义静态数据合并（数据插入完成之后）
      */
     public $mergeCellsByStaticData;
-    
+
     /**
-     * @Desc 数据插入完成后合并单元格，默认合并首行标题
+     * 数据插入完成后合并单元格，默认合并首行标题
      * @return array|array[]
      * @Date 2023/6/25 19:38
      */
@@ -749,9 +749,9 @@ abstract class BaseExport extends AbstractExporter {
         }
         return [];
     }
-    
+
     /**
-     * @Desc 数据插入后回调
+     * 数据插入后回调
      * @return $this
      * @Date 2023/6/25 19:39
      */
@@ -767,16 +767,16 @@ abstract class BaseExport extends AbstractExporter {
         }
         return $this;
     }
-    
+
     /**
-     * @Desc 文件输出前回调
+     * 文件输出前回调
      * @Date 2023/6/25 19:39
      */
     public function beforeOutput() {
     }
-    
+
     /**
-     * @Desc 输出文件
+     * 输出文件
      * @return string
      * @Date 2023/6/25 19:39
      */
@@ -784,14 +784,14 @@ abstract class BaseExport extends AbstractExporter {
         $this->beforeOutput();
         return $this->excel->output();
     }
-    
+
     /**
      * @var array 保存列数到列名的关系
      */
     public $columnMap = [];
-    
+
     /**
-     * @Desc 根据列数得到字母
+     * 根据列数得到字母
      * 可以看做10进制转26进制，除26取余，逆序排列，把余数转成字母倒序拼接。
      * @param int $columnIndex
      * @return string
@@ -801,7 +801,7 @@ abstract class BaseExport extends AbstractExporter {
         if (array_key_exists($columnIndex, $this->columnMap)) {
             return $this->columnMap[$columnIndex];
         }
-        
+
         // 由于循环条件为$divide>0，而且$columnIndex从0开始，所以+1
         $divide = $columnIndex + 1;
         $columnName = '';
@@ -813,14 +813,14 @@ abstract class BaseExport extends AbstractExporter {
         }
         return $this->columnMap[$columnIndex] = $columnName;
     }
-    
+
     /**
      * @var array 保存列名到列数的关系
      */
     public $columnIndexMap = [];
-    
+
     /**
-     * @Desc 根据字母列名得到列数
+     * 根据字母列名得到列数
      * @param string $columnName
      * @return float|int
      * @Date 2023/6/15 19:49
@@ -832,7 +832,7 @@ abstract class BaseExport extends AbstractExporter {
         // 将列名中的字母按顺序拆分成一个一个单独的字母，并进行倒序排列。
         $columnNameReverse = strrev($columnName);
         $arr = str_split($columnNameReverse);
-        
+
         // 对每个字母进行转换，将其转换为对应的数字
         $columnIndex = 0;
         foreach ($arr as $key => $value) {
@@ -842,9 +842,9 @@ abstract class BaseExport extends AbstractExporter {
         // 将最终计算出的列数值减去1，以得到以0为起点的列数值
         return $this->columnIndexMap[$columnName] = $columnIndex - 1;
     }
-    
+
     /**
-     * @Desc 是否在下载后删除
+     * 是否在下载后删除
      * @param bool $v
      * @return $this
      * @Date 2023/6/25 19:40
@@ -853,9 +853,9 @@ abstract class BaseExport extends AbstractExporter {
         $this->shouldDelete = $v;
         return $this;
     }
-    
+
     /**
-     * @Desc 执行下载
+     * 执行下载
      * @param null $filePath
      * @Date 2023/6/25 19:40
      */
@@ -863,20 +863,27 @@ abstract class BaseExport extends AbstractExporter {
         if ($filePath) {
             $this->filePath = $filePath;
         }
-        response()->download($this->filePath)->deleteFileAfterSend($this->shouldDelete)->send();
+
+        $response = response()->download($this->filePath)->deleteFileAfterSend($this->shouldDelete);
+
+        // 如果使用swoole进行导出，不能调用exit()，需要控制器直接返回下载响应
+        if (class_exists('\Swoole\Server')) {
+            return $response;
+        }
+        $response->send();
         exit();
     }
-    
+
     /**
-     * @Desc 导出一条龙
+     * 导出一条龙
      *  保存到文件-》下载-》下载后删除
      * @throws Exception
      * @Date 2023/6/25 19:41
      */
     public function export() {
-        $this->store()->shouldDelete()->download();
+        return $this->store()->shouldDelete()->download();
     }
-    
+
     /**
      * @var int 最大一次导出50万条数据
      */
@@ -893,7 +900,7 @@ abstract class BaseExport extends AbstractExporter {
      * @var bool 是否为调试模式
      */
     public $debug = false;
-    
+
     /**
      * 设置默认字体
      * @param string $fontFamily
@@ -902,7 +909,7 @@ abstract class BaseExport extends AbstractExporter {
         $this->fontFamily = $fontFamily;
         return $this;
     }
-    
+
     /**
      * 设置表头行高
      * @param int $headerRowHeight
@@ -911,7 +918,7 @@ abstract class BaseExport extends AbstractExporter {
         $this->headerRowHeight = $headerRowHeight;
         return $this;
     }
-    
+
     /**
      * 设置标题行高
      * @param int $titleRowHeight
@@ -920,7 +927,7 @@ abstract class BaseExport extends AbstractExporter {
         $this->titleRowHeight = $titleRowHeight;
         return $this;
     }
-    
+
     /**
      * 是否使用标题行
      * @param bool $useTitle
@@ -929,7 +936,7 @@ abstract class BaseExport extends AbstractExporter {
         $this->useTitle = $useTitle;
         return $this;
     }
-    
+
     /**
      * 设置最大导出数据量
      * @param int $max
@@ -938,7 +945,7 @@ abstract class BaseExport extends AbstractExporter {
         $this->max = $max;
         return $this;
     }
-    
+
     /**
      * 设置每个分块的数据量
      * @param int $chunkSize
@@ -947,7 +954,7 @@ abstract class BaseExport extends AbstractExporter {
         $this->chunkSize = $chunkSize;
         return $this;
     }
-    
+
     /**
      * 设置是否为调试模式
      * @param bool $debug
@@ -956,14 +963,14 @@ abstract class BaseExport extends AbstractExporter {
         $this->debug = $debug;
         return $this;
     }
-    
+
     /**
      * @var float|string 调试模式中用于计算导出耗时
      */
     public $time;
-    
+
     /**
-     * @Desc 分块处理方法
+     * 分块处理方法
      * @param null|callable $callback
      * @return $this
      * @throws Exception
@@ -972,27 +979,27 @@ abstract class BaseExport extends AbstractExporter {
     public function chunk($callback = null) {
         $times = 1;
         $this->completed = 0;
-        
+
         do {
             /** @var Collection $result 分块回调buildData的返回值 */
             $result = $callback($times, $this->chunkSize);
             $count = count($result);
             $this->completed += $count;
             // dd($times,$result,$count);
-            
+
             // 插入分块数据
             $this->insertChunkData($result);
             unset($this->chunkData, $result);
-            
+
             if ($this->debug) {
                 dump('已导出：' . $this->completed . '条，耗时' . (number_format(microtime(true) - $this->time, 2)) . '秒' . "-" . '内存：' . memory_get_peak_usage() / 1024000);
             }
             $times++;
         } while ($count === $this->chunkSize && $this->completed < $this->max);
-        
+
         return $this;
     }
-    
+
     /**
      * 根据数据源，分块获取数据
      * @param int|null $page    第几个分块
@@ -1012,9 +1019,9 @@ abstract class BaseExport extends AbstractExporter {
                 throw new Exception('无效的数据源类型');
         }
     }
-    
+
     /**
-     * @Desc 用查询构造器获取分块数据
+     * 用查询构造器获取分块数据
      * @param int|null $page
      * @param int|null $perPage
      * @return mixed
@@ -1023,9 +1030,9 @@ abstract class BaseExport extends AbstractExporter {
     public function buildDataFromQuery(?int $page = null, ?int $perPage = null) {
         return $this->query->forPage($page, $perPage)->get();
     }
-    
+
     /**
-     * @Desc 从集合获取分块数据
+     * 从集合获取分块数据
      * @param int|null $page
      * @param int|null $perPage
      * @return Collection
@@ -1034,9 +1041,9 @@ abstract class BaseExport extends AbstractExporter {
     public function buildDataFromCollection(?int $page = null, ?int $perPage = null) {
         return $this->data->forPage($page, $perPage);
     }
-    
+
     /**
-     * @Desc 从其他方式获取分块数据(dcat从grid导出查询获取数据集合，获取分块数据）
+     * 从其他方式获取分块数据(dcat从grid导出查询获取数据集合，获取分块数据）
      * @param int|null $page
      * @param int|null $perPage
      * @return Collection
@@ -1044,28 +1051,28 @@ abstract class BaseExport extends AbstractExporter {
      */
     public function buildDataFromOther(?int $page = null, ?int $perPage = null) {
         $model = $this->getGridModel();
-        
+
         // current page
         if ($this->scope === Exporter::SCOPE_CURRENT_PAGE) {
             $page = $model->getCurrentPage();
             $perPage = $model->getPerPage();
         }
-        
+
         $model->usePaginate(false);
-        
+
         if ($page && $this->scope !== Exporter::SCOPE_SELECTED_ROWS) {
             $perPage = $perPage ?: $this->getChunkSize();
-            
+
             $model->forPage($page, $perPage);
         }
-        
+
         $array = $this->grid->processFilter();
         $model->reset();
-        
+
         // 这里不转换为数组，直接返回模型集合
         return $this->callBuilder($array);
     }
-    
+
     // /**
     //  * make代替new
     //  * @param mixed ...$params
@@ -1074,5 +1081,5 @@ abstract class BaseExport extends AbstractExporter {
     // public static function make(...$params) {
     //     return new static(...$params);
     // }
-    
+
 }
