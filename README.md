@@ -71,11 +71,6 @@ use Aoding9\Dcat\Xlswriter\Export\HandleExportIfUseSwoole;
 
 ## 版本更新
 
-- v1.2.1 (2023-6-30)
-    - 数据源新增other类型，非query/array/collection则均为other
-    - 新增buildDataFromOther，当数据源为other类型时，buildData会调用它，重写以返回自定义数据集合
-    - 构造函数现在数据源默认为null，即other类型。
-    - $useGlobalStyle现在默认为true，使用全局默认样式代替列默认样式，效果是数据末尾行之后不再有边框。
 - v1.2.2 (2023-9-16)
     - download时判断`app()->has('swoole')`，如果使用了swoole，将返回下载响应，代替默认的exit()
     - 新增`HandleExportIfUseSwoole`，用于swoole访问dcat时，重写控制器的index以返回下载响应
