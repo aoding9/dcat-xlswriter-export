@@ -754,7 +754,7 @@ abstract class BaseExport extends AbstractExporter {
     public function afterInsertData() {
         if (!empty($this->mergeCellsByStaticData = $this->mergeCellsAfterInsertData())) {
             foreach ($this->mergeCellsByStaticData as $i) {
-                $this->excel->mergeCells($i['range'], $i['value'], $i['formatHandle'] ?? null);
+                $this->excel->mergeCells($i['range'], $i['value'], $i['formatHandle'] ?? $this->normalStyle);
             }
         }
         if ($this->debug) {
